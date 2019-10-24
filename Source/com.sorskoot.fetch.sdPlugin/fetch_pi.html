@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>com.sorskoot.fetch PI</title>
+    <link rel="stylesheet" href="sdpi.css">
+    <script src="common.js"></script>
+</head>
+
+<body>
+    <div class="sdpi-wrapper">
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">URL</div>
+            <input class="sdpi-item-value" id="url-input"
+                onchange="sendValueToPlugin(event.target.value, 'url')" />
+        </div>
+    </div>
+
+    <script>
+        let pluginAction = null,
+            uuid = '',
+            urlInput = document.getElementById('url-input');
+
+        if ($SD) {
+            $SD.on('connected', function (jsonObj) {
+                console.log('connected', jsonObj);
+                uuid = jsonObj['uuid'];
+                if (jsonObj.hasOwnProperty('actionInfo')) {
+                    pluginAction = jsonObj.actionInfo['action'];
+                    
+                    let url = jsonObj.actionInfo.payload.settings.url;
+                    urlInput.value = url;
+                }
+                
+            });
+        };
+
+        /** you can also use ES6 syntax like so:
+        *
+        *   if ($SD) $SD.on('connected', (jsonObj) => { uuid=jsonObj.uuid }));
+        *    
+        */
+
+        function sendValueToPlugin(value, param) {
+
+            // console.log("SENDING VALUE TO PLUGIN: ", value, uuid, pluginAction);
+
+            if ($SD && $SD.connection) {
+                var payload = {};
+                if (param) {
+                    payload[param] = value;
+                }
+                $SD.api.sendToPlugin(uuid, pluginAction, payload);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "StreamDeckFetch",
+  "version": "1.0.0",
+  "description": "Stream Deck Action to do REST call to a specific URL to trigger things like bots or events.",
+  "main": "index.js",
+  "scripts": {
+    "build": "BuildStreamDeckFetchPlugin.cmd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sorskoot/StreamDeckFetch.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sorskoot/StreamDeckFetch/issues"
+  },
+  "homepage": "https://github.com/sorskoot/StreamDeckFetch#readme"
+}

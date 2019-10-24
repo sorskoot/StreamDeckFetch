@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>com.sorskoot.fetch</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <script>
+
+        var websocket = null;
+        var pluginUUID = null;
+        var settingsCache = {};
+
+        var DestinationEnum = Object.freeze({ "HARDWARE_AND_SOFTWARE": 0, "HARDWARE_ONLY": 1, "SOFTWARE_ONLY": 2 })
+
+        var numberdisplayAction = {
+
+            type: "com.sorskoot.fetch.action",
+
+            onKeyDown: function (context, settings, coordinates, userDesiredState) {
+            },
+
+            onKeyUp: function (context, settings, coordinates, userDesiredState) {
+                fetch(settings.url);
+            },
+
+            onWillAppear: function (context, settings, coordinates) {
+                let url = settings.hasOwnProperty('url');
+                // var keyPressCounter = 0;
+                // if (settings != null && settings.hasOwnProperty('keyPressCounter')) {
+                //     keyPressCounter = settings["keyPressCounter"];
+                // }
+                // settingsCache[context] = { 'keyPressCounter': keyPressCounter };
+                // this.SetTitle(context, keyPressCounter);
+            },
+
+            SetSettings: function (context, settings) {
+                var json = {
+                    "event": "setSettings",
+                    "context": context,
+                    "payload": settings
+                };
+
+                websocket.send(JSON.stringify(json));
+            },
+
+            AddToSettings: function (context, newSettings) {
+                settingsCache[context]
+            }
+        };
+
+        function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
+            pluginUUID = inPluginUUID
+
+            // Open the web socket
+            websocket = new WebSocket("ws://127.0.0.1:" + inPort);
+
+            function registerPlugin(inPluginUUID) {
+                var json = {
+                    "event": inRegisterEvent,
+                    "uuid": inPluginUUID
+                };
+
+                websocket.send(JSON.stringify(json));
+            };
+
+            websocket.onopen = function () {
+                // WebSocket is connected, send message
+                registerPlugin(pluginUUID);
+            };
+
+            websocket.onmessage = function (evt) {
+                // Received message from Stream Deck
+                var jsonObj = JSON.parse(evt.data);
+                var event = jsonObj['event'];
+                var action = jsonObj['action'];
+                var context = jsonObj['context'];
+                var jsonPayload = jsonObj['payload'] || {};
+
+                if (event == "keyDown") {
+                    var settings = jsonPayload['settings'];
+                    var coordinates = jsonPayload['coordinates'];
+                    var userDesiredState = jsonPayload['userDesiredState'];
+                    numberdisplayAction.onKeyDown(context, settings, coordinates, userDesiredState);
+                }
+                else if (event == "keyUp") {
+                    var settings = jsonPayload['settings'];
+                    var coordinates = jsonPayload['coordinates'];
+                    var userDesiredState = jsonPayload['userDesiredState'];
+                    numberdisplayAction.onKeyUp(context, settings, coordinates, userDesiredState);
+                }
+                else if (event == "willAppear") {
+                    var settings = jsonPayload['settings'];
+                    var coordinates = jsonPayload['coordinates'];
+                    numberdisplayAction.onWillAppear(context, settings, coordinates);
+                }
+                else if (event == "sendToPlugin") {
+                    if (jsonPayload.hasOwnProperty('url')) {
+                        const url = jsonPayload['url'];
+                        numberdisplayAction.SetSettings(context, { "url": url });
+                    }
+                }
+            };
+
+            websocket.onclose = function () {
+                // Websocket is closed
+            };
+        };
+
+    </script>
+
+</body>
+
+</html>

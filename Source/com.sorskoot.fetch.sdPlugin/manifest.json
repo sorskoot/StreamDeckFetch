@@ -1,0 +1,41 @@
+{
+  "Actions": [
+    {
+      "Icon": "actionIcon",
+      "Name": "Fetch URL",
+      "States": [
+        {
+          "Image": "actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "16"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "This action calls a URL",
+      "UUID": "com.sorskoot.fetch.action"
+    }
+  ],
+  "SDKVersion": 2,
+  "Author": "Sorskoot",
+  "CodePath": "index.html",
+  "Description": "This action calls a URL specified by the user",
+  "Name": "Fetch",
+  "Icon": "pluginIcon",
+  "URL": "https://www.timmykokke.com",
+  "PropertyInspectorPath": "fetch_pi.html",
+  "Version": "1.0",
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": 
+    {
+        "MinimumVersion" : "4.1"
+    }
+}
