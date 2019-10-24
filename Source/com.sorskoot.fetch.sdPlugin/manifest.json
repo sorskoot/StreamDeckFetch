@@ -21,6 +21,8 @@
   "Description": "This action calls a URL specified by the user",
   "Name": "Fetch",
   "Icon": "pluginIcon",
+  "Category": "Fetch",
+  "CategoryIcon": "pluginIcon",
   "URL": "https://www.timmykokke.com",
   "PropertyInspectorPath": "fetch_pi.html",
   "Version": "1.0",
